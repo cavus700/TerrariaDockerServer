@@ -1,0 +1,52 @@
+#!/bin/bash
+
+PID=$!
+echo "PID:$PID"
+CONFIG_PATH="/etc/Terraria/config.cfg "
+
+function prepare-config {
+    cp /etc/Terraria/config_template.cfg $CONFIG_PATH
+    echo -e "Writing config:\nWORLD=$WORLD\nMAX_PLAYERS=$MAX_PLAYERS\nPORT=$PORT\nMOTD=$MOTD\nSECURE=$SECURE\nLANGUAGE=$LANGUAGE\n"
+
+    sed -i "s/{{WORLD}}/$WORLD/g" $CONFIG_PATH
+    sed -i "s/{{MAX_PLAYERS}}/$MAX_PLAYERS/g" $CONFIG_PATH
+    sed -i "s/{{PORT}}/$PORT/g" $CONFIG_PATH
+    sed -i "s/{{PASSWORD}}/$PASSWORD/g" $CONFIG_PATH
+    sed -i "s/{{MOTD}}/$MOTD/g" $CONFIG_PATH
+    sed -i "s/{{SECURE}}/$SECURE/g" $CONFIG_PATH
+    sed -i "s/{{LANGUAGE}}/$LANGUAGE/g" $CONFIG_PATH
+}
+
+function start-server {
+    echo "Starting server..."
+    tmux new -s terraria -d "/TerrariaServer/TerrariaServer.bin.x86_64 -config $CONFIG_PATH $START_PARAMETER" 
+    echo "Server up und running"
+}
+function save-server {
+    echo "Check if server is running"
+    tmux ls > /dev/null 2>&1
+    if [[ $(echo $?) == "0" ]]; then
+    echo "Save server"
+        tmux set-buffer "save" \; paste-buffer \; send-keys C-m
+    else
+        echo "Server stoppped"
+    fi
+}
+
+function stop-server {
+    # You won't see this in the terminal. Use `docker logs <container_id>` instead.
+    echo "Stop server"
+    tmux set-buffer "exit" \; paste-buffer \; send-keys C-m
+	rm $CONFIG_PATH
+}
+
+trap "stop-server" 1 2 3 6 15
+
+prepare-config
+start-server
+
+while :
+do
+    sleep $AUTOSAVE_INTERVAL & wait $PID
+    save-server
+done

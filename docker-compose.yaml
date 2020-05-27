@@ -1,0 +1,19 @@
+---
+services:
+    build: .
+    volumes:
+        - ./config:/etc/Terraria
+        - ./worlds:/usr/local/games/Terraria/Worlds
+    ports: 
+        - 7777:7777
+    environment: 
+        - WORLD=<<NAME_OF_YOUR_WORLD.wld>>
+        - MAX_PLAYERS=10
+        - PORT=7777
+        - PASSWORD=<<SECRET_PASSWORD>>
+        - MOTD="Welcome, fuckers!"
+        - SECURE=1 
+        - LANGUAGE=de\/DE
+        - AUTOSAVE_INTERVAL=5m
+        - START_PARAMETER="-steam"
+    stop_signal: SIGTERM
