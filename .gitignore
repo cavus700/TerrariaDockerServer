@@ -1,2 +1,5 @@
 *.zip
+config/server_password.txt
+config/config.cfg
 worlds/*.wld
+worlds/*.wld.bak

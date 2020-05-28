@@ -1,19 +1,22 @@
----
+version: '3.7'
 services:
-    build: .
+  terraria:
+    build: 
+      context: ./
+      target: server
     volumes:
-        - ./config:/etc/Terraria
-        - ./worlds:/usr/local/games/Terraria/Worlds
+      - ./config:/etc/Terraria
+      - ./worlds:/usr/local/games/Terraria/Worlds
     ports: 
-        - 7777:7777
+      - 7777:7777
     environment: 
-        - WORLD=<<NAME_OF_YOUR_WORLD.wld>>
-        - MAX_PLAYERS=10
-        - PORT=7777
-        - PASSWORD=<<SECRET_PASSWORD>>
-        - MOTD="Welcome, fuckers!"
-        - SECURE=1 
-        - LANGUAGE=de\/DE
-        - AUTOSAVE_INTERVAL=5m
-        - START_PARAMETER="-steam"
+      - WORLD=<<WORLD_NAME>>
+      - MAX_PLAYERS=10
+      - PORT=7777
+      - PASSWORD_FILE=server_password.txt
+      - MOTD="Welcome, fuckers! Enjoy your stay and try not to die..."
+      - SECURE=1 
+      - LANGUAGE=de\/DE
+      - AUTOSAVE_INTERVAL=5m
+      - START_PARAMETER="-steam"
     stop_signal: SIGTERM

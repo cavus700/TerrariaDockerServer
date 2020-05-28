@@ -12,7 +12,7 @@ RUN cd / && \
     unzip -qq /terraria.zip && \
     chmod +x /1404/Linux/TerrariaServer.bin.x86_64
 
-FROM mono:6.8-slim
+FROM mono:6.8-slim as server
 
 EXPOSE 7777
 
