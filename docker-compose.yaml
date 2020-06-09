@@ -1,9 +1,7 @@
-version: '3.7'
+version: '3'
 services:
   terraria:
-    build: 
-      context: ./
-      target: server
+    build: ./
     volumes:
       - ./config:/etc/Terraria
       - ./worlds:/usr/local/games/Terraria/Worlds
@@ -20,3 +18,4 @@ services:
       - AUTOSAVE_INTERVAL=5m
       - START_PARAMETER="-steam"
     stop_signal: SIGTERM
+    restart: unless-stopped
